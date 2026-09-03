@@ -11,7 +11,7 @@
     "setup": "npm install && npm --prefix server install",
     "seed:admin": "npm --prefix server run seed:admin",
     "seed:data": "npm --prefix server run seed:data",
-    "build": "vite build",
+    "build": "vite build && node scripts/createSpaFallback.js",
     "lint": "oxlint",
     "preview": "vite preview"
   },
