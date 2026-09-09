@@ -64,12 +64,4 @@ The frontend runs at `http://localhost:5173`.
 - Secrets belong only in `server/.env`, which is ignored by Git.
 - Demo payments do not communicate with a real bank.
 
-## Admin
 
-Create the admin account with `npm run seed:admin` inside `server/`. The configured admin email is:
-
-```text
-ayushchapetkar@gmail.com
-```
-
-The password is read only from `ADMIN_PASSWORD` in `server/.env`.
