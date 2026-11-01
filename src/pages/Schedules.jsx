@@ -24,6 +24,8 @@ export default function Schedules({ addToast }) {
 
   // State for filtered schedules shown on UI
   const [filteredFerries, setFilteredFerries] = useState([]);
+  const [searchError, setSearchError] = useState("");
+  const [searchRetry, setSearchRetry] = useState(0);
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [routes, setRoutes] = useState([]);
@@ -45,6 +47,7 @@ export default function Schedules({ addToast }) {
     const qType = searchParams.get("type");
 
     setIsLoading(true);
+    setSearchError("");
     scheduleService.search({
       source: qFrom,
       destination: qTo,
@@ -60,6 +63,7 @@ export default function Schedules({ addToast }) {
       })
       .catch((error) => {
         setFilteredFerries([]);
+        setSearchError(error.message || "Schedules are temporarily unavailable.");
         addToast(error.message, "error");
       })
       .finally(() => setIsLoading(false));
@@ -70,7 +74,7 @@ export default function Schedules({ addToast }) {
     setTo(qTo || "");
     setType(qType || "");
     setDate(searchParams.get("date") || "");
-  }, [searchParams, addToast]);
+  }, [searchParams, addToast, searchRetry]);
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
@@ -213,6 +217,17 @@ export default function Schedules({ addToast }) {
               {isLoading ? (
                 <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center text-sm font-semibold text-slate-500">
                   Loading current schedules...
+                </div>
+              ) : searchError ? (
+                <div className="bg-white rounded-2xl border border-rose-100 shadow-sm p-12 text-center flex flex-col items-center justify-center min-h-[350px]">
+                  <div className="p-4 bg-rose-50 rounded-full text-rose-500 mb-5">
+                    <Ship className="w-10 h-10" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">Schedules Unavailable</h3>
+                  <p className="text-xs text-slate-500 max-w-sm leading-relaxed mb-6">{searchError}</p>
+                  <Button onClick={() => setSearchRetry((attempt) => attempt + 1)} variant="outline" className="text-slate-600 hover:text-slate-900 border-slate-200">
+                    Try Again
+                  </Button>
                 </div>
               ) : filteredFerries.length > 0 ? (
                 <div className="space-y-4">

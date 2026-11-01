@@ -8,6 +8,15 @@ import SearchForm from "../components/SearchForm";
 import Button from "../components/Button";
 import { contactService, routeService } from "../services/dataService";
 
+const routeImages = [
+  "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1494783367193-149034c05e8f?auto=format&fit=crop&w=600&q=80",
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=600&q=80"
+];
+
 // Custom animated counter component using Framer Motion
 function StatCounter({ value, suffix = "", duration = 2 }) {
   const [count, setCount] = useState(0);
@@ -53,13 +62,13 @@ export default function Home({ addToast }) {
   useEffect(() => {
     routeService.getAll()
       .then((routes) => {
-        const cards = routes.slice(0, 6).map((route) => ({
+        const cards = routes.slice(0, 6).map((route, index) => ({
             id: route._id,
             from: route.source,
             to: route.destination,
             price: route.basePrice,
             duration: `${route.estimatedDuration} mins`,
-            image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
+            image: routeImages[index % routeImages.length],
             description: `Travel from ${route.source} to ${route.destination} on a scheduled FerryPort service.`
           }));
         setLiveRoutes(cards);

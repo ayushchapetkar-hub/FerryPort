@@ -27,7 +27,7 @@ export default function BookTicket({ addToast }) {
   const [formErrors, setFormErrors] = useState({});
 
   // Payment Form State
-  const [paymentMethod, setPaymentMethod] = useState("upi"); // upi, card, netbanking, counter
+  const [paymentMethod, setPaymentMethod] = useState("upi_demo"); // all online methods are simulations
   const [paymentData, setPaymentData] = useState({
     upiId: "",
     cardName: "",
@@ -159,7 +159,7 @@ export default function BookTicket({ addToast }) {
 
   // Pricing Calculations
   const calculateTotal = () => {
-    if (!selectedFerry) return { base: 0, tax: 0, total: 0 };
+    if (!selectedFerry) return { base: 0, tax: 0, serviceCharge: 0, convenienceFee: 0, total: 0 };
     const base = selectedFerry.price * selectedSeats.length;
     const tax = Math.round(base * ((selectedFerry.taxPercent ?? 5) / 100));
     const serviceCharge = selectedFerry.serviceCharge ?? 0;
@@ -175,18 +175,19 @@ export default function BookTicket({ addToast }) {
     };
   };
 
-  const { base, tax, total } = calculateTotal();
+  const { base, tax, serviceCharge, convenienceFee, total } = calculateTotal();
+  const serviceAndConvenienceFee = serviceCharge + convenienceFee;
 
   // Payment Validation
   const validatePayment = () => {
     const errors = {};
-    if (paymentMethod === "upi") {
+    if (paymentMethod === "upi_demo") {
       if (!paymentData.upiId.trim()) {
         errors.upiId = "UPI ID is required.";
       } else if (!paymentData.upiId.includes("@")) {
         errors.upiId = "Enter a valid UPI ID (e.g. username@bank).";
       }
-    } else if (paymentMethod === "card") {
+    } else if (paymentMethod === "card_demo") {
       if (!paymentData.cardName.trim()) {
         errors.cardName = "Cardholder name is required.";
       }
@@ -212,7 +213,7 @@ export default function BookTicket({ addToast }) {
 
   const handlePayNow = async (e) => {
     e.preventDefault();
-    if (paymentMethod !== "counter" && paymentMethod !== "netbanking" && !validatePayment()) {
+    if (paymentMethod !== "counter_demo" && paymentMethod !== "netbanking_demo" && !validatePayment()) {
       addToast("Please fill in the required payment fields correctly.", "error");
       return;
     }
@@ -440,6 +441,10 @@ export default function BookTicket({ addToast }) {
                   <div className="flex justify-between">
                     <span>GST (5%)</span>
                     <span className="font-bold text-slate-800">₹{tax}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Service &amp; convenience fee</span>
+                    <span className="font-bold text-slate-800">₹{serviceAndConvenienceFee}</span>
                   </div>
                 </div>
               </div>
@@ -703,6 +708,10 @@ export default function BookTicket({ addToast }) {
                       <span>GST (5%)</span>
                       <span className="font-bold text-slate-800">₹{tax}</span>
                     </div>
+                    <div className="flex justify-between">
+                      <span>Service &amp; convenience fee</span>
+                      <span className="font-bold text-slate-800">₹{serviceAndConvenienceFee}</span>
+                    </div>
                     <div className="border-t border-slate-100 my-2 pt-2 flex justify-between font-bold text-slate-900 text-sm">
                       <span>Grand Total</span>
                       <span className="text-ocean-600 text-lg font-black">₹{total}</span>
@@ -755,39 +764,39 @@ export default function BookTicket({ addToast }) {
                   <button
                     type="button"
                     onClick={() => {
-                      setPaymentMethod("upi");
+                      setPaymentMethod("upi_demo");
                       setPaymentErrors({});
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      paymentMethod === "upi"
+                      paymentMethod === "upi_demo"
                         ? "bg-ocean-50 border-ocean-200 text-ocean-700"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                     }`}
                   >
-                    UPI Payment
+                    UPI (Demo)
                   </button>
                   <button
                     type="button"
                     onClick={() => {
-                      setPaymentMethod("card");
+                      setPaymentMethod("card_demo");
                       setPaymentErrors({});
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      paymentMethod === "card"
+                      paymentMethod === "card_demo"
                         ? "bg-ocean-50 border-ocean-200 text-ocean-700"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                     }`}
                   >
-                    Debit / Credit Card
+                    Card (Dummy)
                   </button>
                   <button
                     type="button"
                     onClick={() => {
-                      setPaymentMethod("netbanking");
+                      setPaymentMethod("netbanking_demo");
                       setPaymentErrors({});
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      paymentMethod === "netbanking"
+                      paymentMethod === "netbanking_demo"
                         ? "bg-ocean-50 border-ocean-200 text-ocean-700"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                     }`}
@@ -797,11 +806,11 @@ export default function BookTicket({ addToast }) {
                   <button
                     type="button"
                     onClick={() => {
-                      setPaymentMethod("counter");
+                      setPaymentMethod("counter_demo");
                       setPaymentErrors({});
                     }}
                     className={`px-4 py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      paymentMethod === "counter"
+                      paymentMethod === "counter_demo"
                         ? "bg-ocean-50 border-ocean-200 text-ocean-700"
                         : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
                     }`}
@@ -811,7 +820,7 @@ export default function BookTicket({ addToast }) {
                 </div>
 
                 {/* UPI Fields */}
-                {paymentMethod === "upi" && (
+                {paymentMethod === "upi_demo" && (
                   <div className="space-y-4">
                     <InputField
                       label="UPI ID"
@@ -825,13 +834,13 @@ export default function BookTicket({ addToast }) {
                       }}
                     />
                     <p className="text-[10px] text-slate-400 font-semibold leading-relaxed">
-                      Enter your virtual payment address (VPA) to approve a mock collect request in your simulator.
+                      Demo only: entering a UPI ID will not send a collect request or move money. Real UPI requires a configured payment provider.
                     </p>
                   </div>
                 )}
 
                 {/* Credit Card Fields */}
-                {paymentMethod === "card" && (
+                {paymentMethod === "card_demo" && (
                   <div className="space-y-4">
                     <InputField
                       label="Cardholder Name"
@@ -893,7 +902,7 @@ export default function BookTicket({ addToast }) {
                 )}
 
                 {/* Net Banking Fields */}
-                {paymentMethod === "netbanking" && (
+                {paymentMethod === "netbanking_demo" && (
                   <div className="space-y-3">
                     <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">Popular Banks</label>
                     <select className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 focus:outline-none focus:border-ocean-500 text-sm font-medium cursor-pointer">
@@ -907,7 +916,7 @@ export default function BookTicket({ addToast }) {
                 )}
 
                 {/* Cash at Counter Fields */}
-                {paymentMethod === "counter" && (
+                {paymentMethod === "counter_demo" && (
                   <div className="p-4 bg-amber-50/50 border border-amber-200/60 rounded-xl text-amber-900 text-xs leading-relaxed font-medium">
                     <h4 className="font-extrabold text-amber-800 mb-1.5">Cash Reservation Notice</h4>
                     Your seat will be reserved tentatively. You must check-in and complete physical cash payment at the port terminal ticketing desk at least 45 minutes prior to vessel departure to secure boarding passes.
@@ -955,6 +964,18 @@ export default function BookTicket({ addToast }) {
                   <div className="flex justify-between">
                     <span>Seats ({selectedSeats.length})</span>
                     <span className="font-bold text-slate-800">{selectedSeats.join(", ")}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Base fare</span>
+                    <span className="font-bold text-slate-800">₹{base}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>GST (5%)</span>
+                    <span className="font-bold text-slate-800">₹{tax}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Service &amp; convenience fee</span>
+                    <span className="font-bold text-slate-800">₹{serviceAndConvenienceFee}</span>
                   </div>
                 </div>
 

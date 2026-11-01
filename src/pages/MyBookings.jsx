@@ -153,7 +153,7 @@ export default function MyBookings({ addToast }) {
                   <div className="p-5 border-t border-slate-100 flex items-center justify-between mt-auto bg-slate-50/20">
                     <div>
                       <span className="block text-[9px] text-slate-400 uppercase">Paid Amount</span>
-                      <span className="text-base font-extrabold text-slate-800">₹{booking.amount}</span>
+                      <span className="text-base font-extrabold text-slate-800">₹{Number(booking.amount).toFixed(2)}</span>
                     </div>
 
                     <div className="flex gap-2">

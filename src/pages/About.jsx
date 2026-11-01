@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Ship, Code2, ShieldAlert, Award, FileSpreadsheet } from "lucide-react";
+import { Ship, Code2, ShieldAlert, FileSpreadsheet, CalendarDays, Armchair, TicketCheck, Tag } from "lucide-react";
 
 export default function About() {
   const technologies = [
@@ -22,7 +22,7 @@ export default function About() {
         <div className="mb-10 text-center md:text-left">
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">About FerryPort</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Learn more about the technology stack, project purpose, and academic context.
+            Explore routes, compare sailings, and manage your ferry trip in one place.
           </p>
         </div>
 
@@ -102,7 +102,7 @@ export default function About() {
 
           </div>
 
-          {/* Right developer info card */}
+          {/* How the website works */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -112,39 +112,46 @@ export default function About() {
             <div className="absolute top-0 right-0 w-32 h-32 bg-ocean-600/10 rounded-full blur-2xl" />
             
             <h3 className="text-lg font-extrabold text-white flex items-center gap-2 mb-6 border-b border-slate-800 pb-4">
-              <Award className="w-5 h-5 text-aqua-400" />
-              Developer Profile
+              <TicketCheck className="w-5 h-5 text-aqua-400" />
+              What you can do
             </h3>
 
             <div className="space-y-5 text-xs">
-              <div>
-                <span className="text-slate-400 font-semibold uppercase tracking-wider text-[9px] block">Student Name</span>
-                <span className="text-base font-extrabold text-white block mt-0.5">[ Ayush Chapetkar ]</span>
-              </div>
-              
-              <div>
-                <span className="text-slate-400 font-semibold uppercase tracking-wider text-[9px] block">Class / Semester</span>
-                <span className="text-sm font-bold text-slate-200 block mt-0.5">Third Year B.Sc. Computer Science (Semester 5)</span>
+              <div className="flex gap-3">
+                <CalendarDays className="w-4 h-4 text-aqua-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-sm font-extrabold text-white block">Find a sailing</span>
+                  <span className="text-slate-300 block mt-1 leading-relaxed">Browse ferry routes and compare departure times, journey details, and fares.</span>
+                </div>
               </div>
 
-              <div>
-                <span className="text-slate-400 font-semibold uppercase tracking-wider text-[9px] block">Roll Number</span>
-                <span className="text-sm font-bold text-slate-200 block mt-0.5">[261009]</span>
+              <div className="flex gap-3">
+                <Armchair className="w-4 h-4 text-aqua-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-sm font-extrabold text-white block">Plan your trip</span>
+                  <span className="text-slate-300 block mt-1 leading-relaxed">Choose seats, add passenger details, and apply an available offer at checkout.</span>
+                </div>
               </div>
 
-              <div>
-                <span className="text-slate-400 font-semibold uppercase tracking-wider text-[9px] block">College Name</span>
-                <span className="text-sm font-bold text-slate-200 block mt-0.5">[M.D.College]</span>
+              <div className="flex gap-3">
+                <TicketCheck className="w-4 h-4 text-aqua-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-sm font-extrabold text-white block">Keep track of bookings</span>
+                  <span className="text-slate-300 block mt-1 leading-relaxed">View booking confirmations and trip details from your account.</span>
+                </div>
               </div>
 
-              <div>
-                <span className="text-slate-400 font-semibold uppercase tracking-wider text-[9px] block">Academic Year</span>
-                <span className="text-sm font-bold text-slate-200 block mt-0.5">2026 - 2027</span>
+              <div className="flex gap-3">
+                <Tag className="w-4 h-4 text-aqua-400 flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-sm font-extrabold text-white block">Manage the service</span>
+                  <span className="text-slate-300 block mt-1 leading-relaxed">Administrators can manage schedules, routes, bookings, offers, and payment records.</span>
+                </div>
               </div>
             </div>
 
             <div className="mt-8 pt-5 border-t border-slate-800 text-[10px] text-slate-400 text-center leading-relaxed">
-              Third Year Semester 5 Capstone Project submission file.
+              FerryPort is a demonstration project. Online payments are simulated and do not transfer real money.
             </div>
           </motion.div>
 
