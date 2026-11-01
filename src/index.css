@@ -78,3 +78,101 @@
     display: none !important;
   }
 }
+
+.pdf-ticket-details {
+  display: none;
+}
+
+.booking-reference {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-height: 1.35;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+  body {
+    display: block !important;
+    background: white !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  .confirmation-page,
+  .confirmation-page * {
+    visibility: visible !important;
+  }
+  .confirmation-page {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+  .confirmation-page > div {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .print-area {
+    position: static !important;
+    width: 100% !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+  .print-area > :not(.pdf-ticket-details) {
+    display: none !important;
+  }
+  .pdf-ticket-details {
+    display: block !important;
+    color: #17243b !important;
+    font-family: Arial, sans-serif;
+    border: 1px solid #d9e2ee;
+    border-radius: 16px;
+    overflow: hidden;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .pdf-ticket-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 26px;
+    background: #f4f8fc;
+    border-bottom: 1px solid #d9e2ee;
+  }
+  .pdf-ticket-brand { display: flex; align-items: center; gap: 11px; font-size: 20px; font-weight: 800; }
+  .pdf-ticket-brand > span:last-child > span { color: #0879c9; }
+  .pdf-ticket-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 11px; color: white; background: #0879c9; }
+  .pdf-ticket-brand small,.pdf-ticket-status small { display: block; margin-top: 4px; color: #718198; font-size: 9px; letter-spacing: 1.1px; }
+  .pdf-ticket-status { color: #07845c; font-size: 10px; font-weight: 800; text-align: right; letter-spacing: .5px; }
+  .pdf-ticket-route { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: center; padding: 32px 26px; }
+  .pdf-ticket-route small,.pdf-ticket-meta small { display: block; margin-bottom: 7px; color: #8a99ad; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+  .pdf-ticket-route strong { display: block; font-size: 21px; }
+  .pdf-ticket-route span { display: block; margin-top: 6px; color: #5e6f86; font-size: 12px; }
+  .pdf-route-line { text-align: center; }
+  .pdf-route-line span { font-size: 8px; letter-spacing: 1px; }
+  .pdf-route-line i { display: block; height: 1px; margin-top: 8px; background: #9eb3ca; }
+  .pdf-ticket-route .pdf-route-destination { text-align: right; }
+  .pdf-ticket-meta { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; padding: 18px 26px; background: #f4f8fc; border-top: 1px solid #e2e9f1; border-bottom: 1px solid #e2e9f1; }
+  .pdf-ticket-meta strong { font-size: 12px; }
+  .pdf-ticket-passengers { padding: 24px 26px; }
+  .pdf-ticket-passengers > strong { display: block; margin-bottom: 12px; font-size: 13px; }
+  .pdf-ticket-passengers > div { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid #e9eef4; font-size: 12px; }
+  .pdf-ticket-passengers small { margin-left: 7px; color: #75849a; }
+  .pdf-ticket-passengers b { color: #0879c9; }
+  .pdf-ticket-total { display: flex; align-items: center; justify-content: space-between; margin: 0 26px; padding: 17px 0; border-top: 1px dashed #bdcadd; }
+  .pdf-ticket-total span { font-size: 13px; font-weight: 700; }
+  .pdf-ticket-total small { display: block; margin-top: 4px; color: #7d8ba0; font-size: 10px; font-weight: 400; }
+  .pdf-ticket-total strong { color: #0879c9; font-size: 20px; }
+  .pdf-ticket-footer { display: flex; justify-content: space-between; gap: 10px; padding: 15px 26px; background: #f4f8fc; color: #687a91; font-size: 9px; }
+  .pdf-ticket-footer b { color: #394a61; }
+}

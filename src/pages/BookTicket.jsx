@@ -15,6 +15,7 @@ export default function BookTicket({ addToast }) {
   const [selectedFerry, setSelectedFerry] = useState(null);
   const [travelDate, setTravelDate] = useState("");
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const requestedPassengerCount = Math.max(1, Math.min(10, Number(location.state?.passengerCount) || 1));
   const [availableFerries, setAvailableFerries] = useState([]);
   
   // Passenger Form State
@@ -94,6 +95,10 @@ export default function BookTicket({ addToast }) {
     if (selectedSeats.includes(seatId)) {
       setSelectedSeats(selectedSeats.filter((s) => s !== seatId));
     } else {
+      if (selectedSeats.length >= requestedPassengerCount) {
+        addToast(`You selected ${requestedPassengerCount} passenger${requestedPassengerCount === 1 ? "" : "s"}. Remove a seat or change your search to book more.`, "error");
+        return;
+      }
       if (selectedSeats.length >= selectedFerry.seatsAvailable) {
         addToast("No more seats are available on this schedule.", "error");
         return;
@@ -357,7 +362,7 @@ export default function BookTicket({ addToast }) {
             {/* Seat selection panel */}
             <div className="md:col-span-8 bg-white border border-slate-100 shadow-sm rounded-2xl p-6 flex flex-col items-center">
               <h2 className="text-xl font-extrabold text-slate-900 self-start mb-2">Select Your Seats</h2>
-              <p className="text-xs text-slate-400 self-start mb-8">Select one or more seats in the deck floor plan below.</p>
+              <p className="text-xs text-slate-400 self-start mb-8">Select {requestedPassengerCount} seat{requestedPassengerCount === 1 ? "" : "s"} for your {requestedPassengerCount} passenger{requestedPassengerCount === 1 ? "" : "s"}. ({selectedSeats.length}/{requestedPassengerCount} selected)</p>
               
               {/* Ferry Deck Visual Container */}
               <div className="w-full max-w-sm border border-slate-200 rounded-3xl p-6 bg-slate-50/50 flex flex-col items-center relative overflow-hidden">
@@ -457,7 +462,7 @@ export default function BookTicket({ addToast }) {
 
                 <Button
                   onClick={() => setStep(3)}
-                  disabled={selectedSeats.length === 0}
+                  disabled={selectedSeats.length !== requestedPassengerCount}
                   className="w-full py-3"
                 >
                   Confirm Seats

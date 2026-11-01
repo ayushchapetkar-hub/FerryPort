@@ -28,35 +28,13 @@ export default function Confirmation() {
   }, [location.state]);
 
   const handlePrint = () => {
+    const previousTitle = document.title;
+    document.title = `FerryPort-Ticket-${booking?.bookingId || "Pass"}`;
+    window.addEventListener("afterprint", () => { document.title = previousTitle; }, { once: true });
     window.print();
   };
 
-  const handleDownload = () => {
-    // Simulated PDF download by creating a mock text/html file or simple download notification
-    const element = document.createElement("a");
-    const ticketText = `
-========================================
-     FERRYPORT BOARDING PASS (MOCK)
-========================================
-Booking ID    : ${booking.bookingId}
-Status        : CONFIRMED
-Passenger(s)  : ${booking.passengers.map((p) => `${p.name} (Seat ${p.seat})`).join(", ")}
-Ferry Name    : ${booking.ferryName} (${booking.ferryType})
-Route         : ${booking.from} to ${booking.to}
-Travel Date   : ${booking.date}
-Departure     : ${booking.departure}
-Arrival       : ${booking.arrival}
-Total Paid    : INR ${booking.amount}
-========================================
-Thank you for traveling with FerryPort!
-    `;
-    const file = new Blob([ticketText], { type: "text/plain" });
-    element.href = URL.createObjectURL(file);
-    element.download = `FerryPort-Ticket-${booking?.bookingId || "Pass"}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  };
+  const handleDownload = () => window.print();
 
   if (isLoading) {
     return <div className="flex-1 bg-slate-50 pt-32 text-center text-sm font-semibold text-slate-500">Loading ticket...</div>;
@@ -82,7 +60,7 @@ Thank you for traveling with FerryPort!
   }
 
   return (
-    <div className="flex-1 bg-slate-50 pt-28 pb-20">
+    <div className="confirmation-page flex-1 bg-slate-50 pt-28 pb-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Success Header */}
@@ -198,46 +176,20 @@ Thank you for traveling with FerryPort!
 
             </div>
 
-            {/* Right Ticket Barcode / Details */}
-            <div className="md:col-span-4 flex flex-col items-center justify-center p-6 bg-slate-50/50 rounded-2xl border border-slate-100 text-center space-y-4 md:h-full">
-              <div className="p-3 bg-white border border-slate-200/80 rounded-2xl shadow-sm">
-                {/* SVG Mock QR Code */}
-                <svg className="w-28 h-28 text-slate-800" viewBox="0 0 100 100">
-                  {/* Outer boundaries */}
-                  <rect x="0" y="0" width="20" height="20" fill="currentColor" />
-                  <rect x="2" y="2" width="16" height="16" fill="white" />
-                  <rect x="5" y="5" width="10" height="10" fill="currentColor" />
-
-                  <rect x="80" y="0" width="20" height="20" fill="currentColor" />
-                  <rect x="82" y="2" width="16" height="16" fill="white" />
-                  <rect x="85" y="5" width="10" height="10" fill="currentColor" />
-
-                  <rect x="0" y="80" width="20" height="20" fill="currentColor" />
-                  <rect x="2" y="82" width="16" height="16" fill="white" />
-                  <rect x="8" y="88" width="4" height="4" fill="currentColor" />
-
-                  {/* Random simulated dots */}
-                  <rect x="30" y="10" width="8" height="8" fill="currentColor" />
-                  <rect x="42" y="5" width="4" height="4" fill="currentColor" />
-                  <rect x="50" y="15" width="10" height="5" fill="currentColor" />
-                  <rect x="30" y="30" width="5" height="12" fill="currentColor" />
-                  <rect x="45" y="45" width="20" height="8" fill="currentColor" />
-                  <rect x="15" y="50" width="8" height="4" fill="currentColor" />
-                  <rect x="75" y="40" width="12" height="15" fill="currentColor" />
-                  <rect x="35" y="65" width="10" height="10" fill="currentColor" />
-                  <rect x="60" y="70" width="12" height="6" fill="currentColor" />
-                  <rect x="55" y="80" width="15" height="8" fill="currentColor" />
-                </svg>
+            {/* Booking reference and fare summary */}
+            <div className="md:col-span-4 flex flex-col justify-center p-6 bg-slate-50/50 rounded-2xl border border-slate-100 text-left space-y-5 md:h-full">
+              <div className="rounded-xl bg-white border border-slate-200 p-4">
+                <span className="block text-[9px] text-slate-400 font-bold uppercase tracking-wider">Keep this booking reference</span>
+                <span className="booking-reference block text-base sm:text-lg font-black text-slate-800 tracking-normal mt-1">{booking.bookingId}</span>
+                <span className="text-[10px] text-slate-500 mt-1 block">Show it to the ferry staff at check-in.</span>
               </div>
-
               <div>
-                <span className="block text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Booking ID</span>
-                <span className="block text-lg font-black text-slate-800 tracking-wider mt-0.5">{booking.bookingId}</span>
+                <span className="block text-[9px] text-slate-400 font-semibold uppercase tracking-wider">Passengers</span>
+                <span className="block text-sm font-bold text-slate-800 mt-1">{booking.passengers.length} traveler{booking.passengers.length === 1 ? "" : "s"}</span>
               </div>
-
-              <div className="border-t border-slate-200/50 w-full pt-3">
-                <span className="block text-[9px] text-slate-400 font-semibold uppercase">Total Amount</span>
-                <span className="block text-xl font-black text-ocean-600 mt-0.5">₹{booking.amount}</span>
+              <div className="border-t border-slate-200 w-full pt-3">
+                <div className="flex justify-between text-xs text-slate-500"><span>Payment status</span><span className="font-bold text-emerald-600">PAID</span></div>
+                <div className="flex justify-between items-end mt-3"><span className="text-[10px] font-bold text-slate-500 uppercase">Total paid</span><span className="text-xl font-black text-ocean-600">₹{Number(booking.amount || 0).toFixed(2)}</span></div>
               </div>
             </div>
 
@@ -245,7 +197,18 @@ Thank you for traveling with FerryPort!
 
           {/* Bottom helper */}
           <div className="bg-slate-50 px-6 py-4 text-center border-t border-slate-100 text-[10px] text-slate-400 font-semibold leading-relaxed">
-            Please display this digital boarding pass at the port gate for scanning.
+            Bring your booking reference and a valid identity document to check in at the port.
+          </div>
+          <div className="pdf-ticket-details">
+            <div className="pdf-ticket-top">
+              <div className="pdf-ticket-brand"><span className="pdf-ticket-mark"><Ship size={18} /></span><span>Ferry<span>Port</span><small>PASSENGER TRAVEL RECEIPT</small></span></div>
+              <div className="pdf-ticket-status">PAYMENT CONFIRMED<small>Booking {booking.bookingId}</small></div>
+            </div>
+            <div className="pdf-ticket-route"><div><small>DEPARTURE</small><strong>{booking.from}</strong><span>{booking.departure}</span></div><div className="pdf-route-line"><span>FERRY VOYAGE</span><i /></div><div className="pdf-route-destination"><small>ARRIVAL</small><strong>{booking.to}</strong><span>{booking.arrival || "As scheduled"}</span></div></div>
+            <div className="pdf-ticket-meta"><div><small>TRAVEL DATE</small><strong>{booking.date}</strong></div><div><small>VESSEL</small><strong>{booking.ferryName}</strong></div><div><small>SEATS</small><strong>{booking.seats.join(", ")}</strong></div><div><small>PASSENGERS</small><strong>{booking.passengers.length}</strong></div></div>
+            <div className="pdf-ticket-passengers"><strong>Passenger manifest</strong>{booking.passengers.map((p, index) => <div key={`pdf-p-${index}`}><span>{p.name} <small>{p.gender}, {p.age} yrs</small></span><b>Seat {p.seat}</b></div>)}</div>
+            <div className="pdf-ticket-total"><span>Paid in full <small>FerryPort booking payment</small></span><strong>₹{Number(booking.amount || 0).toFixed(2)}</strong></div>
+            <div className="pdf-ticket-footer"><span>Arrive at the boarding point at least 30 minutes before departure.</span><b>ferryport · {booking.bookingId}</b></div>
           </div>
         </motion.div>
 

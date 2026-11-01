@@ -15,6 +15,7 @@ export default function Schedules({ addToast }) {
   const initTo = searchParams.get("to") || "";
   const initDate = searchParams.get("date") || "";
   const initType = searchParams.get("type") || "";
+  const passengerCount = Math.max(1, Math.min(10, Number(searchParams.get("passengers")) || 1));
 
   // State for form filters
   const [from, setFrom] = useState(initFrom);
@@ -83,6 +84,7 @@ export default function Schedules({ addToast }) {
     if (to) params.to = to;
     if (date) params.date = date;
     if (type) params.type = type;
+    if (passengerCount > 1) params.passengers = String(passengerCount);
 
     setSearchParams(params);
   };
@@ -97,7 +99,7 @@ export default function Schedules({ addToast }) {
 
   const handleBookNow = (schedule) => {
     // Navigate to booking wizard page passing the ferry schedule state
-    navigate("/book", { state: { schedule } });
+    navigate("/book", { state: { schedule, passengerCount } });
   };
 
   return (
